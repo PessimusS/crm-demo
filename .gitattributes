@@ -1,0 +1,24 @@
+# 自动处理行结束符
+* text=auto
+
+# 这些文件应该使用LF（Unix风格）
+*.sh text eol=lf
+*.js text eol=lf
+*.json text eol=lf
+*.md text eol=lf
+*.txt text eol=lf
+*.html text eol=lf
+*.css text eol=lf
+*.bat text eol=crlf
+
+# 二进制文件
+*.db binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.pdf binary
+*.zip binary
+*.rar binary
+*.7z binary
