@@ -1,7 +1,18 @@
 {
+  "name": "crm-sales-operations-demo",
+  "version": "1.0.0",
+  "description": "A lightweight CRM MVP connecting customer records, follow-ups and sales KPI analytics.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "check": "node --check server.js"
+  },
+  "engines": {
+    "node": ">=20 <26"
+  },
+  "license": "MIT",
   "dependencies": {
     "better-sqlite3": "^12.6.2",
-    "body-parser": "^2.2.2",
     "cors": "^2.8.6",
     "express": "^5.2.1"
   }

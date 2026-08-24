@@ -1,75 +1,92 @@
-# CRM 客户关系管理系统
+# CRM Sales Operations Demo
 
-一个基于 Node.js + Express + SQLite 的客户关系管理系统，包含客户管理、跟进记录、KPI统计等功能。
+一个面向小型销售团队的轻量 CRM MVP，用一条清晰的业务链路连接客户资料、跟进记录与销售 KPI。项目采用 Node.js、Express 和 SQLite 构建，下载后即可在本地运行。
 
-## 功能特性
+## 解决的问题
 
-- **客户管理**：创建、查看客户信息，支持多种分类（行业、来源、状态）
-- **跟进管理**：多种跟进类型（电话、会议、拜访等），记录跟进结果和耗时
-- **KPI统计**：销售人员绩效统计、跟进类型分析、客户行业分布
+销售跟进常分散在表格、聊天记录和个人笔记中，团队难以统一查看客户状态，也无法快速统计销售人员的触达频次与服务覆盖。这个 Demo 将核心流程收敛为：
 
-## 快速启动
-
-### 1. 安装 Node.js
-
-如果你的电脑没有安装 Node.js，请先下载安装：
-
-1. 访问 Node.js 官网：https://nodejs.org/
-2. 下载 **LTS（长期支持版）** 安装包
-3. 运行安装程序，一路点击"下一步"完成安装
-4. 安装完成后，打开命令行终端，输入以下命令验证安装：
-   ```bash
-   node --version
-   npm --version
-   ```
-   如果显示版本号，说明安装成功。
-
-### 2. 启动项目
-
-打开命令行终端（Windows 按 `Win+R`，输入 `cmd` 回车），进入项目目录后执行：
-
-```bash
-# 安装依赖
-npm install
-
-# 启动服务器
-node server.js
+```text
+客户建档 → 分配销售 → 记录跟进 → 沉淀历史 → 汇总 KPI
 ```
 
-### 3. 访问应用
+## 核心能力
 
-启动成功后，打开浏览器访问：http://localhost:3000
+- **客户管理**：记录公司、联系人、行业、来源和客户状态。
+- **跟进闭环**：支持电话、线上会议、拜访、邮件等跟进类型，并记录结果与耗时。
+- **历史追踪**：按客户查看完整跟进记录，减少信息断层。
+- **销售 KPI**：统计跟进次数、客户覆盖数、总耗时及不同触达方式。
+- **开箱即用**：首次启动自动创建 SQLite 表并写入少量演示数据。
+
+## 产品与技术结构
+
+```mermaid
+flowchart LR
+    UI[响应式 Web 界面] --> API[Express REST API]
+    API --> Customer[客户管理]
+    API --> Followup[跟进管理]
+    API --> KPI[KPI 聚合]
+    Customer --> DB[(SQLite)]
+    Followup --> DB
+    KPI --> DB
+```
+
+项目刻意保持单文件应用结构，适合作为业务原型和需求验证 Demo；生产系统应进一步拆分前后端、补充权限与审计能力。
+
+## 快速运行
+
+要求 Node.js 20–25。
+
+```bash
+git clone https://github.com/PessimusS/crm-demo.git
+cd crm-demo
+npm install
+npm start
+```
+
+浏览器访问 `http://localhost:3000`。数据库文件 `crm_demo.db` 会在首次启动时自动生成。
+
+## API
+
+| 方法 | 路径 | 用途 |
+|---|---|---|
+| `GET` | `/api/customers` | 查询客户列表 |
+| `POST` | `/api/customers` | 新建客户 |
+| `GET` | `/api/customers/:id` | 查询客户详情 |
+| `GET` | `/api/customers/:id/followups` | 查询客户跟进记录 |
+| `POST` | `/api/customers/:id/followups` | 新增跟进记录 |
+| `GET` | `/api/users` | 查询销售人员 |
+| `GET` | `/api/kpi/sales` | 销售人员 KPI |
+| `GET` | `/api/kpi/customers` | 客户行业与来源统计 |
+| `GET` | `/api/kpi/followups` | 跟进类型与结果统计 |
+
+`/api/kpi/sales` 和 `/api/kpi/followups` 支持可选的 `start`、`end` 日期参数。
 
 ## 技术栈
 
-| 组件 | 技术 |
-|------|------|
-| 后端 | Node.js + Express |
-| 数据库 | SQLite (better-sqlite3) |
-| 前端 | HTML/CSS/JavaScript |
+| 层级 | 技术 |
+|---|---|
+| Web / API | Node.js、Express 5 |
+| 数据存储 | SQLite、better-sqlite3 |
+| 前端 | 原生 HTML、CSS、JavaScript |
+| 数据交换 | REST、JSON |
 
 ## 项目结构
 
-```
+```text
 crm-demo/
-├── server.js          # 主服务器文件（包含前后端）
-├── package.json       # 项目依赖配置
-├── crm_demo.db        # SQLite数据库（启动后自动生成）
-└── README.md          # 项目说明
+├── server.js          # API、数据库初始化与演示界面
+├── package.json       # 项目命令与依赖
+├── package-lock.json  # 锁定依赖版本
+└── README.md
 ```
 
-## API 接口
+## 当前边界
 
-| 方法 | 路径 | 说明 |
-|------|------|------|
-| GET | /api/customers | 获取所有客户 |
-| POST | /api/customers | 创建新客户 |
-| GET | /api/customers/:id | 获取客户详情 |
-| GET | /api/customers/:id/followups | 获取客户跟进记录 |
-| POST | /api/customers/:id/followups | 添加跟进记录 |
-| GET | /api/users | 获取所有用户 |
-| GET | /api/kpi/sales | 获取销售KPI统计 |
+- 当前为本地业务原型，未实现账号登录、角色权限和操作审计。
+- 演示界面与服务端位于同一文件，便于快速验证，不代表生产架构。
+- 示例数据仅用于体验流程，不应承载真实客户隐私信息。
 
-## 许可证
+## License
 
 MIT

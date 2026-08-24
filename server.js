@@ -1,11 +1,10 @@
 // server.js
 const express = require('express');
 const Database = require('better-sqlite3');
-const bodyParser = require('body-parser');
 const cors = require('cors');
 
 const app = express();
-app.use(bodyParser.json());
+app.use(express.json({ limit: '1mb' }));
 app.use(cors());
 
 // init sqlite db (file)
@@ -203,7 +202,7 @@ app.get('/api/users', async (req,res) => {
   res.json(rows);
 });
 
-const PORT = 3000;
+const PORT = Number(process.env.PORT || 3000);
 app.listen(PORT, () => console.log('Server running on http://localhost:'+PORT));
 
 // --- Simple but complete frontend HTML ---
@@ -560,6 +559,17 @@ const frontendHtml = `
                         <option value="教育">教育</option>
                         <option value="医疗">医疗</option>
                         <option value="零售">零售</option>
+                        <option value="其他">其他</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="c_source">客户来源</label>
+                    <select id="c_source" class="form-control">
+                        <option value="">选择来源</option>
+                        <option value="展会">展会</option>
+                        <option value="推荐">客户推荐</option>
+                        <option value="官网">官网咨询</option>
+                        <option value="主动开发">主动开发</option>
                         <option value="其他">其他</option>
                     </select>
                 </div>
